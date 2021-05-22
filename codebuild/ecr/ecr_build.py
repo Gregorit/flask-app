@@ -16,6 +16,12 @@ class Ecrbuild(core.Stack):
     def __init__(self, app: core.App, id: str, **kwargs) -> None:
         super().__init__(app, id, **kwargs)
 
+        bucket = aws_s3.Bucket(
+            self, "SourceBucket",
+            bucket_name=f"flask-bucket-{core.Aws.ACCOUNT_ID}",
+            versioned=True,
+            removal_policy=core.RemovalPolicy.DESTROY)
+
         # ECR repository for Docker images
         ecr = aws_ecr.Repository(
             self, "ECR",
@@ -43,9 +49,10 @@ class Ecrbuild(core.Stack):
 
         ecr.grant_pull_push(ecr_build)
 
-        self.ecr_build = ecr_build
+        self.output_params['ecr_build'] = ecr_build
+        self.output_params['bucket'] = bucket
 
 
     @property
     def outputs(self):
-        return self.ecr_build
+        return self.output_params
