@@ -9,6 +9,7 @@ from aws_cdk import (
 class CodePipeline(core.Stack):
     def __init__(self, app: core.App, id: str, props, **kwargs) -> None:
         super().__init__(app, id, **kwargs)
+        source_output = aws_codepipeline.Artifact(artifact_name='source')
         codepipeline = aws_codepipeline.Pipeline(
             self, "CodePipeline",
             pipeline_name="flask-pipeline",
