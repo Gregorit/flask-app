@@ -33,7 +33,7 @@ class CodePipeline(core.Stack):
                         aws_codepipeline_actions.CodeBuildAction(
                             action_name='DockerBuildImages',
                             input=source_output,
-                            project=props['cb_docker_build'],
+                            project=props['ecr_build'],
                             run_order=1,
                         )
                     ]
