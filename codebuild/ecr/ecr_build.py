@@ -8,6 +8,7 @@
 from aws_cdk import (
     aws_ecr,
     aws_codebuild,
+    aws_s3,
     core,
 )
 
