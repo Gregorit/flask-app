@@ -2,8 +2,8 @@ from aws_cdk import (
     core,
 )
 
-from Ecrbuild import Ecrbuild
-from CodePipeline import CodePipeline
+from codebuild.ecr.Ecrbuild import Ecrbuild
+from codepipeline.CodePipeline import CodePipeline
 
 props = {'namespace': 'cdk-example-pipeline'}
 app = core.App()
