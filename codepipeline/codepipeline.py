@@ -12,7 +12,6 @@ class CodePipeline(core.Stack):
         codepipeline = aws_codepipeline.Pipeline(
             self, "CodePipeline",
             pipeline_name="flask-pipeline",
-            artifact_bucket=props['bucket'],
             stages=[
                 aws_codepipeline.StageProps(
                     stage_name='Build',
