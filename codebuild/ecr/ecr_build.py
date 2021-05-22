@@ -13,7 +13,7 @@ from aws_cdk import (
 
 
 class Ecrbuild(core.Stack):
-    def __init__(self, app: core.App, id: str, props, **kwargs) -> None:
+    def __init__(self, app: core.App, id: str, **kwargs) -> None:
         super().__init__(app, id, **kwargs)
 
         # ECR repository for Docker images

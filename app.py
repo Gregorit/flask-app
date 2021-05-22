@@ -9,7 +9,7 @@ props = {'namespace': 'cdk-example-pipeline'}
 app = core.App()
 
 # stack for ecr, bucket, codebuild
-ecr = Ecrbuild(app, "flask-ecr", props)
+ecr = Ecrbuild(app, "flask-ecr")
 
 # pipeline stack
 code_pipeline = CodePipeline(app, "flask-pipeline", ecr.outputs)
