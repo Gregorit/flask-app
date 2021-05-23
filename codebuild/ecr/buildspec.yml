@@ -16,8 +16,7 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Pushing image to ECR...
-      - docker push $ecr:latest
-      - docker push $ecr:$tag
+      - docker push $ecr
       - 'printf "[{\\"name\\":\\"${tag}\\",\\"imageUri\\":\\"${ecr}:latest\\"}]" > imagedefinitions.json'
 artifacts:
   files:

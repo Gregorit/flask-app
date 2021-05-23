@@ -32,7 +32,7 @@ class Ecscluster(core.Stack):
             cluster=cluster,
             memory_limit_mi_b=512,
             task_image_options={
-                "image": aws_ecs.ContainerImage.fromAsset('.')
+                "image": aws_ecs.ContainerImage.from_asset('.')
             },
             target_groups=[{
                 "container_port": 5000
