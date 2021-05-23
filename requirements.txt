@@ -9,6 +9,7 @@ aws-cdk.aws-ecr
 aws-cdk.aws-ecr-assets
 aws-cdk.aws-s3
 aws-cdk.aws-s3-assets
+aws-cdk.aws-elasticloadbalancingv2
 
 aws-cdk.aws-sqs
 aws-cdk.aws-ssm

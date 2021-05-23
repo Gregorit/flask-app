@@ -8,7 +8,6 @@ phases:
   build:
     commands:
       - cd codebuild/ecr
-      - ls
       - echo Build started on `date`
       - docker build --tag ${tag}:latest .
       - docker tag $tag:latest $ecr:$tag
@@ -17,6 +16,7 @@ phases:
       - echo Build completed on `date`
       - echo Pushing image to ECR...
       - docker push $ecr
+      - cd
       - 'printf "[{\\"name\\":\\"${tag}\\",\\"imageUri\\":\\"${ecr}:latest\\"}]" > imagedefinitions.json'
 artifacts:
   files:

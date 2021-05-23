@@ -11,4 +11,3 @@ phases:
     commands:
       - cd codebuild/ecs/cdk
       - cdk deploy --require-approval never -O out.json
-      - python3 post_cdk_deployment.py
