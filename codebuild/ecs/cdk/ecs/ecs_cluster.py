@@ -30,10 +30,11 @@ class Ecscluster(core.Stack):
 
         load_balanced_ec2_service = aws_ecs_patterns.ApplicationMultipleTargetGroupsEc2Service(self, "ECSService",
             cluster=cluster,
-            memory_limit_mi_b=512,
+            # memory_limit_mi_b=512,
             task_image_options={
                 "image": aws_ecs.ContainerImage.from_asset('.')
             },
+            container_port=5000,
             target_groups=[{
                 "container_port": 5000
             }, {
