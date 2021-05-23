@@ -3,12 +3,22 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo logging into docker
+      - echo logging into ECR
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
   build:
     commands:
-      - echo Entered the post_build phase...
-      - echo Build completed on `date`
-      - docker build -t ${tag}:latest
+      - cd codebuild/ecr
+      - ls
+      - echo Build started on `date`
+      - docker build --tag ${tag}:latest .
       - docker tag $tag:latest $ecr:$tag
-      - docker push $ecr
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing image to ECR...
+      - docker push $ecr:latest
+      - docker push $ecr:$tag
+      - 'printf "[{\\"name\\":\\"${tag}\\",\\"imageUri\\":\\"${ecr}:latest\\"}]" > imagedefinitions.json'
+artifacts:
+  files:
+    - imagedefinitions.json

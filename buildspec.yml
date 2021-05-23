@@ -9,4 +9,4 @@ phases:
       - pip3 install -r requirements.txt
   build:
     commands:
-      - cdk deploy --require-approval never -O out.json
+      - cdk deploy --require-approval never --all -O out.json

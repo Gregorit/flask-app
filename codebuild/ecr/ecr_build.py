@@ -1,4 +1,5 @@
 """ This AWS CDK part does:
+- S3 bucket for CodePipeline
 - ECR repository
 - CodeBuild:
     - creates Docker image
@@ -14,7 +15,7 @@ from aws_cdk import (
 
 
 class Ecrbuild(core.Stack):
-    def __init__(self, app: core.App, id: str, **kwargs) -> None:
+    def __init__(self, app: core.App, id: str, props, **kwargs) -> None:
         super().__init__(app, id, **kwargs)
 
         bucket = aws_s3.Bucket(
@@ -30,11 +31,10 @@ class Ecrbuild(core.Stack):
             removal_policy=core.RemovalPolicy.DESTROY
         )
 
-        ecr_build = aws_codebuild.PipelineProject(
-            self, "ECRBuild",
+        ecr_build = aws_codebuild.PipelineProject(self, "ECRBuild",
             project_name="ecr-image-build",
             build_spec=aws_codebuild.BuildSpec.from_source_filename(
-                filename='buildspec.yml'),
+                filename='codebuild/ecr/buildspec.yml'),
             environment=aws_codebuild.BuildEnvironment(
                 privileged=True,),
             # pass the ecr repo uri into the codebuild project so codebuild knows where to push
@@ -50,10 +50,10 @@ class Ecrbuild(core.Stack):
 
         ecr.grant_pull_push(ecr_build)
 
-        self.output_params = {}
+        self.output_params = props.copy()
+        self.output_params['ecr'] = ecr
         self.output_params['ecr_build'] = ecr_build
         self.output_params['bucket'] = bucket
-
 
     @property
     def outputs(self):
