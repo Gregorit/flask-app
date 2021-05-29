@@ -6,8 +6,10 @@
 - ECS Configuration
 """
 
+import os
 from aws_cdk import (
     core,
+    aws_ecr,
     aws_ec2,
     aws_ecs,
     aws_ecs_patterns,
@@ -24,11 +26,6 @@ class Ecscluster(core.Stack):
             max_azs=2
         )
 
-        # vpc = aws_ec2.Vpc.from_vpc_attributes(self, "VPC",
-        #     vpc_id="vpc-f80bfa81",
-        #     availability_zones=["eu-west-1a","eu-west-1b","eu-west-1c"]
-        # )
-
         cluster = aws_ecs.Cluster(self, 'ECSCluster',
             vpc=vpc,
             cluster_name="flask-ecs"
@@ -36,6 +33,7 @@ class Ecscluster(core.Stack):
 
         cluster.add_capacity("DefaultAutoScalingGroup",
             instance_type=aws_ec2.InstanceType("t2.xlarge"),
+            desired_capacity=2,
         )
 
         # Create Task Definition
@@ -43,7 +41,8 @@ class Ecscluster(core.Stack):
             self, "TaskDef")
         container = task_definition.add_container(
             "web",
-            image=aws_ecs.ContainerImage.from_asset('/'),
+            # image=aws_ecs.ContainerImage.from_ecr_repository(os.environ["ecr"]),
+            image=aws_ecs.ContainerImage.from_asset('./'),
             # image=aws_ecs.ContainerImage.from_registry("amazon/amazon-ecs-sample"),
             memory_limit_mib=256
         )
@@ -64,7 +63,6 @@ class Ecscluster(core.Stack):
         # Setup AutoScaling policy
         scaling = service.auto_scale_task_count(
             min_capacity=2,
-            desired_capacity=2,
             max_capacity=6
         )
         scaling.scale_on_cpu_utilization(
@@ -113,37 +111,3 @@ class Ecscluster(core.Stack):
             stickiness_cookie_duration=core.Duration.minutes(5),
             vpc=vpc
         )
-
-        # load_balanced_ec2_service = aws_ecs_patterns.ApplicationMultipleTargetGroupsEc2Service(self, "ECSService",
-        #     cluster=cluster,
-        #     # memory_limit_mi_b=512,
-        #     task_image_options={
-        #         "image": aws_ecs.ContainerImage.from_asset('.')
-        #     },
-        #     container_port=5000,
-        #     target_groups=[{
-        #         "container_port": 5000
-        #     }, {
-        #         "container_port": 5000,
-        #         "path_pattern": "a/b/c",
-        #         "priority": 10
-        #     }
-        #     ]
-        # )
-
-        # scalable_target = load_balanced_ec2_service.service.auto_scale_task_count(
-        #     min_capacity=2,
-        #     max_capacity=10
-        # )
-
-        # scalable_target.scale_on_cpu_utilization("CpuScaling",
-        #     target_utilization_percent=50,
-        #     scale_in_cooldown=core.Duration.seconds(60),
-        #     scale_out_cooldown=core.Duration.seconds(60)
-        # )
-
-        # scalable_target.scale_on_memory_utilization("MemoryScaling",
-        #     target_utilization_percent=50,
-        #     scale_in_cooldown=core.Duration.seconds(60),
-        #     scale_out_cooldown=core.Duration.seconds(60)
-        # )

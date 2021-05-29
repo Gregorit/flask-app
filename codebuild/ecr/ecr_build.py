@@ -51,7 +51,7 @@ class Ecrbuild(core.Stack):
         ecr.grant_pull_push(ecr_build)
 
         self.output_params = props.copy()
-        self.output_params['ecr'] = ecr
+        self.output_params['ecr'] = ecr.repository_uri
         self.output_params['ecr_build'] = ecr_build
         self.output_params['bucket'] = bucket
 
